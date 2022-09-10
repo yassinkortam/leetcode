@@ -13,8 +13,8 @@ struct Node{
 
 class Sequence{
 private:
-    Node *head;
-    int size;
+    Node *_head;
+    int _size;
 public:
     Sequence(); // Create an empty sequence (i.e., one with no items)
     bool empty() const; // Return true if the sequence is empty, otherwise false.
@@ -63,26 +63,26 @@ public:
 };
 
 Sequence::Sequence(){
-    head = new Node;
-    head->next = nullptr;
-    head->prev = nullptr;
-    size = 1;
+    _head = new Node;
+    _head->next = nullptr;
+    _head->prev = nullptr;
+    _size = 1;
 }
 
-bool Sequence::empty(){
-    if (head->next == nullptr && head->prev == nullptr) return true;
+bool Sequence::empty() const{
+    if (_head->next == nullptr && _head->prev == nullptr) return true;
     return false;
 }
 
 int Sequence::insert(int pos, const ItemType& value){
-    if (pos >= size) return -1;
+    if (pos >= _size) return -1;
     Node *new_node = new Node; //allocate memory for new node
     new_node->data = *value; 
     new_node->next = nullptr;
     new_node->prev = nullptr;
 
     Node *temp = new Node; //allocate memory for temp node (suceeding node to new node)
-    temp = head;
+    temp = _head;
     for (int i=0; i<pos; i++){
         temp = temp->next;
     }
@@ -91,14 +91,14 @@ int Sequence::insert(int pos, const ItemType& value){
     new_node->prev = temp->prev;
     temp->prev = new_node; 
 
-    size ++; //increase size by 1
+    _size ++; //increase size by 1
     return pos;
 }
 
 int Sequence::insert(const ItemType& value){
     int p = 0;
     Node *temp = new Node;
-    temp = head;
+    temp = _head;
     while (value < temp->data){
         if (temp->next != nullptr){
             temp = temp->next;
@@ -109,7 +109,7 @@ int Sequence::insert(const ItemType& value){
             new_node->prev = temp;
             new_node->next = nullptr;
             temp->next = new_node;
-            size++;
+            _size++;
             return p;
         }
     }
@@ -118,7 +118,7 @@ int Sequence::insert(const ItemType& value){
         new_node->prev = temp->prev;
         new_node->next = temp->next;
         temp->prev = new_node;
-        size++;
+        _size++;
         return p;
     }
     return -1;
