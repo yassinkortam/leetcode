@@ -3,6 +3,11 @@
 #include <string>
 #endif
 
+#ifndef IOSTREAM
+#define IOSTREAM
+#include <iostream>
+#endif
+
 using ItemType = std::string;
 
 struct Node{
@@ -13,10 +18,12 @@ struct Node{
 
 class Sequence{
 private:
+    Node *_tail;
     Node *_head;
     int _size;
 public:
     Sequence(); // Create an empty sequence (i.e., one with no items)
+    void print() const; //Prints the entire sequence
     bool empty() const; // Return true if the sequence is empty, otherwise false.
     int size() const; // Return the number of items in the sequence.
     int insert(int pos, const ItemType& value); 
@@ -64,20 +71,34 @@ public:
 
 Sequence::Sequence(){
     _head = new Node;
-    _head->next = nullptr;
+    _tail = new Node;
+
     _head->prev = nullptr;
-    _size = 1;
+    _head->next = _tail;
+    _tail->prev = _head;
+    _tail->next = nullptr;
+
+    _size = 0;
+}
+
+void Sequence::print() const{
+    Node *temp = new Node;
+    temp = _head->next;
+    while (temp != _tail){
+        std::cout << temp->data << std::endl;
+        temp = temp->next;
+    }
 }
 
 bool Sequence::empty() const{
-    if (_head->next == nullptr && _head->prev == nullptr) return true;
+    if (_head->next == nullptr) return true;
     return false;
 }
 
 int Sequence::insert(int pos, const ItemType& value){
-    if (pos >= _size) return -1;
+    if (pos > _size) return -1;
     Node *new_node = new Node; //allocate memory for new node
-    new_node->data = *value; 
+    new_node->data = value; 
     new_node->next = nullptr;
     new_node->prev = nullptr;
 
@@ -100,27 +121,29 @@ int Sequence::insert(const ItemType& value){
     Node *temp = new Node;
     temp = _head;
     while (value < temp->data){
-        if (temp->next != nullptr){
-            temp = temp->next;
+        if (temp != _tail){ //only iterate to next node if its not the last one
+            temp = temp->next; 
             p++;
         }
-        else{
+        else{ //if we reach tail and no data greater than value
             Node *new_node = new Node;
             new_node->prev = temp;
             new_node->next = nullptr;
             temp->next = new_node;
+            _tail = new_node;
             _size++;
-            return p;
+            return p; 
         }
     }
-    if (temp->data <= value){
+    if (temp->data <= value){ //while loop will only break if this is true anyways
         Node *new_node = new Node;
         new_node->prev = temp->prev;
         new_node->next = temp->next;
+        if (temp->prev == nullptr) _head = new_node;
         temp->prev = new_node;
         _size++;
         return p;
     }
-    return -1;
+    return -1; //will never be reached anyways
 }
 
