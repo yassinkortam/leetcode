@@ -10,14 +10,13 @@
 
 using ItemType = std::string;
 
-struct Node{
-    ItemType data;
-    Node *next;
-    Node *prev;
-};
-
 class Sequence{
 private:
+    struct Node{ 
+        ItemType data;
+        Node *next;
+        Node *prev;
+    };
     Node *_tail;
     Node *_head;
     int _size;
@@ -25,17 +24,23 @@ public:
     // Create an empty sequence (i.e., one with no items)
     Sequence(); 
 
+    // Copy constructor
+    Sequence(const Sequence& other);
+
     // Destructor
     ~Sequence();
 
-    //Prints the entire sequence
-    void print() const; 
+    //Assignment operator
+    Sequence &operator=(const Sequence &src);
 
     // Return true if the sequence is empty, otherwise false.
     bool empty() const; 
 
      // Return the number of items in the sequence.
     int size() const;
+
+    // Print sequence
+    void print() const;
 
     // Insert value into the sequence so that it becomes the item at
     // position pos.  The original item at position pos and those that
@@ -86,193 +91,3 @@ public:
     // Exchange the contents of this sequence with the other one.
     void swap(Sequence& other);
 };
-
-Sequence::Sequence(){
-    _head = new Node;
-    _tail = new Node;
-
-    _head->prev = nullptr;
-    _head->next = _tail;
-    _tail->prev = _head;
-    _tail->next = nullptr;
-
-    _size = 0;
-}
-
-Sequence::~Sequence(){
-
-}
-
-void Sequence::print() const{
-    Node *temp = new Node;
-    temp = _head->next;
-    std::cout << "[";
-    while (temp->next != _tail){
-        std::cout << temp->data << ", ";
-        temp = temp->next;
-    }
-    std::cout << temp->data << "]";
-}
-
-bool Sequence::empty() const{
-    if (_head->next == _tail) return true;
-    return false;
-}
-
-int Sequence::insert(int pos, const ItemType& value){
-    if (pos >= _size) return -1;
-
-    Node *new_node = new Node; //allocate memory for new node
-    new_node->data = value; 
-
-    Node *temp = new Node; //allocate memory for temp node (suceeding node to new node)
-    temp = _head->next;
-    for (int i=0; i<pos; i++){
-        temp = temp->next;
-    }
-
-    new_node->next = temp; 
-    new_node->prev = temp->prev;
-
-    (temp->prev)->next = new_node;
-    temp->prev = new_node; 
-
-    _size ++; //increase size by 1
-    return pos;
-}
-
-int Sequence::insert(const ItemType& value){
-    int p = 0;
-    if (_head->next == _tail){ //empty sequence case
-      Node *new_node = new Node;
-      new_node->data = value;
-      new_node->prev = _head;
-      new_node->next = _tail;
-
-      _head->next = new_node;
-      _tail->prev = new_node;
-
-      _size++;
-      return p;
-    }
-    Node *temp = new Node;
-    temp = _head->next;
-    while (value < temp->data){
-        if (temp->next != _tail){ //only iterate to next node if its not the last one
-            temp = temp->next; 
-            p++;
-        }
-        else{ //if we reach tail and no data greater than value
-            Node *new_node = new Node;
-            new_node->data = value;
-            new_node->prev = temp;
-            new_node->next = _tail;
-
-            temp->next = new_node;
-            _tail->prev = new_node;
-
-            _size++;
-            return p; 
-        }
-    }
-
-    Node *new_node = new Node;
-    new_node->data = value;
-    new_node->prev = temp->prev;
-    new_node->next = temp;
-
-    (temp->prev)->next = new_node;
-    temp->prev = new_node;
-
-    _size++;
-    return p;
-    
-}
-
-bool Sequence::erase(int pos){
-    if (pos >= _size) return false;
-
-    Node *temp = new Node;
-    temp = _head->next;
-
-    for (int i=0; i<pos; i++){
-        temp = temp->next;
-    }
-    (temp->next)->prev = temp->prev;
-    (temp->prev)->next = temp->next;
-    free(temp);
-    _size--;
-    return true;
-}
-
-int Sequence::remove(const ItemType& value){
-    if (_size == 0) return 0;
-
-    int pos = 0;
-    Node *temp = new Node;
-    temp = _head;
-
-    while (temp != _tail){
-        if (temp->data == value){
-            (temp->next)->prev = temp->prev;
-            (temp->prev)->next = temp->next;
-            free(temp);
-            return pos;
-        }
-        temp = temp->next;
-        pos++;
-    }
-    return 0;
-}
-
-bool Sequence::get(int pos, ItemType& value) const{
-    if (pos >= _size) return false;
-
-    Node *temp = new Node;
-    temp = _head->next;
-
-    for (int i=0; i<pos; i++){
-        temp = temp->next;
-    }
-
-    value = temp->data;
-    return true;
-}
-
-bool Sequence::set(int pos, const ItemType& value){
-    if (pos >= _size) return false;
-
-    Node *temp = new Node;
-    temp = _head->next;
-
-    for (int i=0; i<pos; i++){
-        temp = temp->next;
-    }
-
-    temp->data = value;
-    return true;
-}
-
-int Sequence::find(const ItemType& value) const{
-    if (_size == 0) return -1;
-
-    int p = 0;
-    Node *temp = new Node;
-    temp = _head->next;
-
-    while (temp != _tail){
-        if (temp->data == value){
-            return p;
-        }
-        temp = temp->next;
-        p++;
-    }
-    return -1;
-}
-
-void Sequence::swap(Sequence& other){
-    
-
-}
-
-
