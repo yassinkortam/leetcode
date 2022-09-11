@@ -91,3 +91,11 @@ public:
     // Exchange the contents of this sequence with the other one.
     void swap(Sequence& other);
 };
+
+//Non-member functions
+
+//Returns start index of a matching subsequence 
+int subsequence(const Sequence& sequence1, const Sequence& sequence2);
+
+//Interleaves two sequences
+void interleave(const Sequence& seq1, const Sequence& seq2, Sequence& result);

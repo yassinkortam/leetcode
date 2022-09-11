@@ -3,6 +3,8 @@
 #include "Sequence.h"
 #endif
 
+//Member functions
+
 Sequence::Sequence(){
     _head = new Node;
     _tail = new Node;
@@ -91,6 +93,10 @@ void Sequence::print() const{
         temp = temp->next;
     }
     std::cout << temp->data << "]";
+}
+
+int Sequence::size() const{
+    return _size;
 }
 
 bool Sequence::empty() const{
@@ -214,8 +220,8 @@ bool Sequence::get(int pos, ItemType& value) const{
     for (int i=0; i<pos; i++){
         temp = temp->next;
     }
-
-    value = temp->data;
+    if (temp != _tail && temp != _head) value = temp->data; //safety
+    else return false;
     return true;
 }
 
@@ -275,4 +281,50 @@ void Sequence::swap(Sequence& other){
     sizer = _size;
     _size = other._size;
     other._size = sizer;
+}
+
+//Non-member functions
+
+int subsequence(const Sequence& source, const Sequence& sub){
+    if (source.size() < sub.size()) return -1;
+    int source_pos = 0;
+    int sub_pos = 0;
+    ItemType source_value;
+    ItemType sub_value;
+
+    while(source.get(source_pos, source_value)){
+        if (sub.get(sub_pos, sub_value)){
+            if (sub_value == source_value){
+                sub_pos++;
+            }
+            else{
+                sub_pos = 0;
+            }
+            source_pos++;
+        }
+        else{
+            return source_pos - sub.size();
+        }
+    }
+    return -1;
+}
+
+void interleave(const Sequence& seq1, const Sequence& seq2, Sequence& result){
+    result = seq2;
+    int pos = 0;
+    ItemType value;
+
+    result.get(result.size()-1, value);
+    result.insert(result.size()-1, value); //adding a padding
+
+    int i=0;
+    while (seq1.get(pos, value)){
+        if (result.insert(i, value) != -1){
+            i += 2;
+        }
+        else{
+            result.insert(result.size()-1, value);
+        }
+    }
+    result.erase(result.size()-1); //removing the padding
 }

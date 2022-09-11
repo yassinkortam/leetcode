@@ -95,4 +95,21 @@ int main(){
     other.print();
     std::cout << "\n";
     */
+
+   //Subsequence test
+   Sequence sub = Sequence();
+   sub.insert("D");
+   sub.insert("C");
+   sub.insert("B");
+   std::cout << "\n Subsequence test \n";
+   sub.print();
+   std::cout << " starts at " << subsequence(sequence, sub) << " in ";
+   sequence.print();
+
+    //Interleave test
+    Sequence interleaved = Sequence();
+    std::cout << "\n Interleave test \n";
+    std::cout << "Above interleaves to: ";
+    interleave(sub, sequence, interleaved);
+    interleaved.print();
 }
