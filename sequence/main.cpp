@@ -93,7 +93,6 @@ int main(){
     std::cout << "\nOther: ";
     other.print();
     std::cout << "\n";
-    
 
     //Subsequence test
     Sequence sub = Sequence();

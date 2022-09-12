@@ -184,6 +184,7 @@ int Sequence::remove(const ItemType& value){
     if (_size == 0) return 0;
 
     int pos = 0;
+    int num_removed = 0;
     Node *temp = new Node;
     temp = _head->next;
 
@@ -192,12 +193,12 @@ int Sequence::remove(const ItemType& value){
             (temp->next)->prev = temp->prev;
             (temp->prev)->next = temp->next;
             free(temp);
-            return pos;
+            num_removed++;
         }
         temp = temp->next;
         pos++;
     }
-    return 0;
+    return num_removed;
 }
 
 bool Sequence::get(int pos, ItemType& value) const{
