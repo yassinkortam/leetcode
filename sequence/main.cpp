@@ -147,24 +147,4 @@ int main(){
     interleave(a, b, c);
     assert(subsequence(a, c) == -1); //test interleave resulting in mix and subsequence false case
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
