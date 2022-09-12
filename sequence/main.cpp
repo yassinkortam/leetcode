@@ -5,7 +5,7 @@
 int main(){
     Sequence sequence = Sequence();
 
-    std::cout << "Sequence Test \n";
+    std::cout << "Visual Sequence Test \n";
 
     //Alphabetical insertion
     sequence.insert("A");
@@ -44,16 +44,16 @@ int main(){
 
     //Get value at given position
     std::cout << "\n Get value at given position \n";
-    std::string value = "";
-    std::cout << "Pass: " << sequence.get(4, value);
-    std::cout << ", NoPass: " << sequence.get(10, value) << "\n";
+    std::string value1 = "";
+    std::cout << "Pass: " << sequence.get(4, value1);
+    std::cout << ", NoPass: " << sequence.get(10, value1) << "\n";
 
-    std::cout << "A: " << value << "\n";
+    std::cout << "A: " << value1 << "\n";
 
     //Set data at given position
     std::cout << "\n Set data at given position \n";
-    std::cout << "Pass: " << sequence.set(0, value);
-    std::cout << ", NoPass: " << sequence.set(10, value) << "\n";
+    std::cout << "Pass: " << sequence.set(0, value1);
+    std::cout << ", NoPass: " << sequence.set(10, value1) << "\n";
 
     std::cout << "ADCBA: ";
     sequence.print();
@@ -109,4 +109,62 @@ int main(){
     std::cout << "Above interleaves to: ";
     interleave(sub, sequence, interleaved);
     interleaved.print();
+
+    //Sequence test 2 
+    Sequence a, b, c;
+    assert(a.size() == 0); //test size
+    assert(a.empty()); //test empty
+
+    assert(a.remove("nothing") == 0); //test remove | empty case
+    assert(!a.erase(0)); //test erase | empty case
+
+    assert(a.find("nothing") == -1); //test find | empty case
+
+    assert(a.insert(1, "A") == -1); //test insert | out of index case
+
+    assert(a.insert("B") == 0); //test insert | normal case
+    assert(a.insert(0, "A") == 0); //test insert | normal case
+
+    assert(a.remove("B") == 1); //test remove | normal case
+    assert(a.erase(0)); //test erase | normal case
+
+    std::string value;
+    a.insert("A"); a.insert("B"); a.insert("C"); 
+    b.insert("X"); b.insert("Y"); b.insert("Z");
+
+    assert(!a.get(4, value)); //test get | out of index case
+    assert(!a.set(4, value)); //test set | out of index case
+
+    assert(a.find("A") == 2); //test find | normal case
+    assert(a.get(2, value)); //test get | normal case
+    assert(a.set(2, value)); //test set | normal case
+
+    c = a;
+    b.swap(a);
+
+    assert(subsequence(b, c) == 0); //test swap resulting equivalence and subsequence normal case
+
+    interleave(a, b, c);
+    assert(subsequence(a, c) == -1); //test interleave resulting in mix and subsequence false case
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

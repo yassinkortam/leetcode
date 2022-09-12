@@ -292,15 +292,17 @@ int subsequence(const Sequence& source, const Sequence& sub){
         if (sub.get(sub_pos, sub_value)){
             if (sub_value == source_value){
                 sub_pos++;
+                if (sub_pos == sub.size()){
+                    return source_pos - sub.size() + 1;
+                }
             }
             else{
                 sub_pos = 0;
             }
             source_pos++;
         }
-        else{
-            return source_pos - sub.size();
-        }
+        else
+            return source_pos - sub.size() + 1;
     }
     return -1;
 }
