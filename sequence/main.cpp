@@ -81,7 +81,6 @@ int main(){
     std::cout << "\n";
 
     //Swap two sequences
-    /*
     std::cout << "\n Swap two sequences \n";
     Sequence other = Sequence();
     other.insert("X");
@@ -94,19 +93,18 @@ int main(){
     std::cout << "\nOther: ";
     other.print();
     std::cout << "\n";
-    */
+    
 
-   //Subsequence test
-   Sequence sub = Sequence();
-   sub.insert("D");
-   sub.insert("C");
-   sub.insert("B");
-   std::cout << "\n Subsequence test \n";
-   sub.print();
-   std::cout << " starts at " << subsequence(sequence, sub) << " in ";
-   sequence.print();
+    //Subsequence test
+    Sequence sub = Sequence();
+    sub.insert("X");
+    std::cout << "\n Subsequence test \n";
+    sub.print();
+    std::cout << " starts at " << subsequence(sequence, sub) << " in ";
+    sequence.print();
+    std::cout << "\n";
 
-    //Interleave test
+    //Interleave test 
     Sequence interleaved = Sequence();
     std::cout << "\n Interleave test \n";
     std::cout << "Above interleaves to: ";

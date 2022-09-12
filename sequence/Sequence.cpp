@@ -8,45 +8,40 @@
 Sequence::Sequence(){
     _head = new Node;
     _tail = new Node;
-
     _head->prev = nullptr;
     _head->next = _tail;
     _tail->prev = _head;
     _tail->next = nullptr;
-
     _size = 0;
 }
 
 Sequence::Sequence(const Sequence& other){
     _head = new Node;
     _tail = new Node;
-
     _head->prev = nullptr;
     _head->next = _tail;
     _tail->prev = _head;
     _tail->next = nullptr;
-
     _size = 0;
 
-    if (other.empty()) return;
+    if (other.empty()) return; 
 
-    Node *temp = new Node, *temp2 = new Node;
-    temp = _head;
-    temp2 = other._head->next;
+    Node *target = new Node, *source = new Node;
+    target = _head;
+    source = other._head->next;
 
-    while (temp2 != other._tail){
+    while (source != other._tail){
         Node *new_node = new Node;
-        new_node->prev = temp;
-        new_node->next = _tail;
-        _tail->prev = new_node;
-        new_node->data = temp2->data;
-
-        temp->next = new_node;
-        temp = new_node;
-        temp2 = temp2->next;
+        new_node->prev = target; //new node comes after target
+        new_node->next = _tail; //new node is added before tail
+        new_node->data = source->data; 
+        _tail->prev = new_node; //tail points back to new_node 
+        target->next = new_node; //target points forward to new_node
+        target = new_node; //move temp forward
+        source = source->next; //move source forward
     }
-    temp->next = _tail;
-    _tail->prev = temp;
+    target->next = _tail;
+    _tail->prev = target;
     _size = other._size;
 }
 
@@ -59,22 +54,23 @@ Sequence::~Sequence(){
 
 Sequence& Sequence::operator=(const Sequence& other){
     int pos = 0;
-    while(erase(pos)) pos++;
+    while(erase(pos)) pos++; //clear target
 
-    Node *temp = new Node;
-    Node *temp2 = new Node;
-    temp = _head;
-    temp2 = other._head->next;
-    while (temp2->next != other._tail){
+    Node *target = new Node; //points to target
+    Node *source = new Node; //points to source sequence
+    target = _head; //target lags
+    source = other._head->next; //source sequence leads
+    while (source != other._tail){  //stop at tail
         Node *new_node = new Node;
-        new_node->prev = temp;
-        new_node->next = _tail;
-        _tail->prev = new_node;
-        new_node->data = temp2->data;
+        new_node->prev = target; //target points back to temp
+        new_node->next = _tail; //target added right behind tail
+        new_node->data = source->data; //target has source data
 
-        temp->next = new_node;
-        temp = temp->next;
-        temp2 = temp2->next;
+        _tail->prev = new_node; //tail points back to new node
+        target->next = new_node; //temp points to new node
+
+        target = target->next; //move temp forward
+        source = source->next; //move temp2 forward
     }
     _size = other._size;
     return *this;
@@ -105,22 +101,22 @@ bool Sequence::empty() const{
 }
 
 int Sequence::insert(int pos, const ItemType& value){
-    if (pos >= _size) return -1;
-
-    Node *new_node = new Node; //allocate memory for new node
-    new_node->data = value; 
+    if (pos >= _size) return -1; //if the position is not in sequence
 
     Node *temp = new Node; //allocate memory for temp node (suceeding node to new node)
-    temp = _head->next;
+    temp = _head; //pos corresponds to steps from head
     for (int i=0; i<pos; i++){
-        temp = temp->next;
+        if (temp != _tail) temp = temp->next;
+        else return -1; //safety case
     }
 
-    new_node->next = temp; 
-    new_node->prev = temp->prev;
+    Node *new_node = new Node; //allocate memory for new node
+    new_node->next = temp->next;  
+    new_node->prev = temp; 
+    new_node->data = value;  
 
-    (temp->prev)->next = new_node;
-    temp->prev = new_node; 
+    temp->next = new_node; 
+    (new_node->next)->prev = new_node; 
 
     _size ++; //increase size by 1
     return pos;
@@ -128,11 +124,11 @@ int Sequence::insert(int pos, const ItemType& value){
 
 int Sequence::insert(const ItemType& value){
     int p = 0;
-    if (_head->next == _tail){ //empty sequence case
+    if (_head->next == _tail){ //Known good: empty sequence case 
       Node *new_node = new Node;
-      new_node->data = value;
       new_node->prev = _head;
       new_node->next = _tail;
+      new_node->data = value;
 
       _head->next = new_node;
       _tail->prev = new_node;
@@ -140,6 +136,7 @@ int Sequence::insert(const ItemType& value){
       _size++;
       return p;
     }
+    
     Node *temp = new Node;
     temp = _head->next;
     while (value < temp->data){
@@ -148,23 +145,14 @@ int Sequence::insert(const ItemType& value){
             p++;
         }
         else{ //if we reach tail and no data greater than value
-            Node *new_node = new Node;
-            new_node->data = value;
-            new_node->prev = temp;
-            new_node->next = _tail;
-
-            temp->next = new_node;
-            _tail->prev = new_node;
-
-            _size++;
-            return p; 
+            break;
         }
     }
 
     Node *new_node = new Node;
-    new_node->data = value;
     new_node->prev = temp->prev;
     new_node->next = temp;
+    new_node->data = value;
 
     (temp->prev)->next = new_node;
     temp->prev = new_node;
@@ -178,12 +166,13 @@ bool Sequence::erase(int pos){
     if (pos >= _size) return false;
 
     Node *temp = new Node;
-    temp = _head->next;
+    temp = _head;
 
-    for (int i=0; i<pos; i++){
-        temp = temp->next;
+    if (temp->next == _tail) return false;
+
+    for (int i=0; i<=pos; i++){
+        if (temp->next != _tail) temp = temp->next;
     }
-    if (temp == _tail) return false; // safety measure
     (temp->next)->prev = temp->prev;
     (temp->prev)->next = temp->next;
     free(temp);
@@ -218,10 +207,10 @@ bool Sequence::get(int pos, ItemType& value) const{
     temp = _head->next;
 
     for (int i=0; i<pos; i++){
-        temp = temp->next;
+        if (temp != _tail) temp = temp->next;
+        else return false;
     }
-    if (temp != _tail && temp != _head) value = temp->data; //safety
-    else return false;
+    value = temp->data; //safety
     return true;
 }
 
@@ -260,7 +249,10 @@ void Sequence::swap(Sequence& other){
     Node *temp = new Node;
     int sizer;
 
-    temp = _head; //save original head
+    //save original head
+    temp->next = _head->next;
+    temp->prev = _head->prev;
+
     _head->next = other._head->next; 
     _head->prev = nullptr;
     (other._head->next)->prev = _head;
@@ -269,7 +261,10 @@ void Sequence::swap(Sequence& other){
     other._head->prev = nullptr;
     (temp->next)->prev = other._head;
 
-    temp = _tail;
+    //save original tail
+    temp->next = _tail->next;
+    temp->prev = _tail->prev;
+
     _tail->next = nullptr;
     _tail->prev = other._tail->prev;
     (other._tail->prev)->next = _tail;
@@ -314,9 +309,6 @@ void interleave(const Sequence& seq1, const Sequence& seq2, Sequence& result){
     int pos = 0;
     ItemType value;
 
-    result.get(result.size()-1, value);
-    result.insert(result.size()-1, value); //adding a padding
-
     int i=0;
     while (seq1.get(pos, value)){
         if (result.insert(i, value) != -1){
@@ -325,6 +317,6 @@ void interleave(const Sequence& seq1, const Sequence& seq2, Sequence& result){
         else{
             result.insert(result.size()-1, value);
         }
+        pos++;
     }
-    result.erase(result.size()-1); //removing the padding
 }

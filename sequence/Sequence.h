@@ -17,8 +17,8 @@ private:
         Node *next;
         Node *prev;
     };
-    Node *_tail;
     Node *_head;
+    Node *_tail;
     int _size;
 public:
     // Create an empty sequence (i.e., one with no items)
