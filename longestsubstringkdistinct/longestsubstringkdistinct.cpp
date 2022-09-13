@@ -1,3 +1,6 @@
+//Given a string, find the length of the longest substring in it with no more than K distinct characters.
+
+
 using namespace std;
 
 #include <iostream>
