@@ -1,16 +1,15 @@
-#include <unordered_map>
 #include <string>
 
 class Solution {
 public:
     string intToRoman(int num) {
-        //store all possible roman numerals in a map
+        //store all possible roman numerals in an array
         //subtract the largest roman number until result < roman number
         //subtract the appropriate roman subtraction number until result < roman number
         //repeat with different roman numerals until result is zero
         
         //all possible roman numerals
-        unordered_map <int, string> intToRoman;
+        string intToRoman[1001];
         intToRoman[1000] = "M";
         intToRoman[900] = "CM";
         intToRoman[500] = "D";
