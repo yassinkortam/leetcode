@@ -29,6 +29,9 @@ public:
         bool pastWordNotInMap = true; //if currentWord is not a repeat
         for (int windowStart = 0; windowStart < s.length(); windowStart++){ //consider all possible reading frames
             
+            //save time by considering if final length of substr is possible
+            if (windowStart + numWords*substrLength > s.length()) break;
+            
             currentWordStart = windowStart;
             
             while (windowWords.size() < numWords){ //don't stop until find 1 full substr
