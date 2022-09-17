@@ -16,7 +16,7 @@ public:
             }
         }
         
-        vector<int> windowStarts; //store the starting indeces
+        vector<int> windowStarts; //store the starting indices
         
         //each key in map represents a word
         //if there are any word repeats
