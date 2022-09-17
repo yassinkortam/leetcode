@@ -8,6 +8,7 @@ public:
         unordered_map <string, int> wordsMap;
         int substrLength = words[0].length();
         for (int i = 0; i < words.size(); i++){
+            
             if (wordsMap.find(words.at(i)) == wordsMap.end()) wordsMap[words.at(i)] = 1;
             else{
                 wordsMap[words.at(i)]++; //take note of repetition
@@ -52,10 +53,12 @@ public:
                       
                     //otherwise check the allowed repetitions
                     }else if (windowWords[currentWord] < wordsMap[currentWord]){
+                        
                         //if allowed, add the repetition
                         windowWords[currentWord]++;
                         //add a dummy key with integers to increment windowWords size
                         windowWords[to_string(currentWordStart)] = 0;
+                        
                         //if the substring is complete, save windowStart and start over
                         if (windowWords.size() == numWords){
                             windowStarts.push_back(windowStart);
